@@ -1,0 +1,12 @@
+[flake8]
+exclude = 
+    */migrations/*,
+    .git,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist,
+    venv,
+    __init__.py
+max-line-length=90
