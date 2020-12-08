@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class PizzaAppConfig(AppConfig):
-    name = 'pizza_app'
+    name = "pizza_app"
