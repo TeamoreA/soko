@@ -35,9 +35,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # local apps
-    "pizza_app",
-    "accounts",
+    # local apps,
+    'rest_framework',
+    "soko.pizza_app",
+    "soko.accounts",
 ]
 
 MIDDLEWARE = [
