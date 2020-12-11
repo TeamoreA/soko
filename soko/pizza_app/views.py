@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from soko.pizza_app import serializers
-from helpers.renderers import DefaultRenderer
 
 class OrderList(APIView):
     permission_classes = (IsAuthenticated,)
