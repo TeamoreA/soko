@@ -19,6 +19,7 @@ class OrderList(APIView):
             resp_list = []
             total = 0
             for order in order_list:
+                # loop though the orders list and process them individually
                 tp = 0
                 order_details = order.split("-")
                 pizza_size = order_details[0].strip()
@@ -26,11 +27,16 @@ class OrderList(APIView):
                 pizza = get_object_or_404(models.Pizza, size=size)
 
                 letters = string.ascii_letters
+                # assign each order a unique id
                 uid = "".join(random.choice(letters) for i in range(10))
+                serializer = serializers.OrderSerializer(
+                    data={"uid": uid, "buyer": request.user.pk, "pizza": pizza.pk})
+                serializer.is_valid(raise_exception=True)
                 order = models.Order.objects.create(
                     uid=uid, buyer=request.user, pizza=pizza)
                 toppings = order_details[1].split(",")
                 for topping in toppings:
+                    # loop through the toppings of a specific pizza and compute their totals
                     tp_data = topping.strip()
                     topping_dt = get_object_or_404(models.Topping, name=tp_data)
                     order.topping.add(topping_dt)
@@ -38,13 +44,13 @@ class OrderList(APIView):
                     tp += int(cats.get(size=size).price)
                 order_tot = int(pizza.price) + tp
                 total += order_tot
+                # format the individual output orders string and the subtotals
                 p = inflect.engine()
-                resp_list.append(f'1 {pizza_size} , {p.number_to_words(len(toppings))} Topping Pizza - {order_details[1]}: KES {order_tot}')
-                request_data = {"uid": uid, "buyer": request.user, "pizza": pizza.pk}
-                serializer = serializers.OrderSerializer(data=request_data)
-                serializer.is_valid(raise_exception=True)
-            amounts = [f'Subtotal: KES {total}', f'VAT: KES {0.16*total}']
-            resp_list.extend(amounts)
-            resp = {'status': 'success', 'data':{'orders':resp_list, 'buyer':request.user.username, 'uid':uid}}
-            return Response(data=resp, status=201)
+                resp_list.append(
+                    f'1 {pizza_size} , {p.number_to_words(len(toppings))} Topping Pizza - {order_details[1]}: KES {order_tot}')
+            vat = round(0.16*total, 2)
+            resp_list.extend([f'Subtotal: KES {total}', f'VAT: KES {vat}', f'Total: KES {int(total+vat)}'])
+            return Response(
+                data={'status': 'success', 'data':{'orders':resp_list, 'buyer':request.user.username, 'uid':uid}},
+                status=201)
         return Response(data={"status": "error"}, status=400)
