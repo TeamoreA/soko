@@ -78,7 +78,7 @@ class Topping(models.Model):
 
 
 class Order(models.Model):
-    uid = models.CharField(max_length=150)
+    uid = models.CharField(max_length=150, unique=True)
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE, blank=True, null=True)
     topping = models.ManyToManyField(Topping)
     buyer = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -7,4 +7,4 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Order
         fields = "__all__"
-        read_only_fields = ("buyer", "uid", "topping")
+        read_only_fields = ("topping",)
