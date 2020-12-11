@@ -41,6 +41,7 @@ class RegisterAPIView(GenericAPIView):
             status=status.HTTP_201_CREATED,
         )
 
+
 class LoginAPIView(GenericAPIView):
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer

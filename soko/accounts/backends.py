@@ -1,4 +1,3 @@
-
 """Configure JWT Here"""
 
 import datetime
