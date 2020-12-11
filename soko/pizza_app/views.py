@@ -1,11 +1,13 @@
 import random
 import string
 import inflect
-from soko.pizza_app import models
+
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from soko.pizza_app import serializers
+from soko.pizza_app import models
 
 class OrderList(APIView):
     permission_classes = (IsAuthenticated,)
@@ -20,8 +22,8 @@ class OrderList(APIView):
                 tp = 0
                 order_details = order.split("-")
                 pizza_size = order_details[0].strip()
-                size = models.Size.objects.get(size=pizza_size).pk
-                pizza = models.Pizza.objects.get(size=size)
+                size = get_object_or_404(models.Size, size=pizza_size).pk
+                pizza = get_object_or_404(models.Pizza, size=size)
 
                 letters = string.ascii_letters
                 uid = "".join(random.choice(letters) for i in range(10))
@@ -30,7 +32,7 @@ class OrderList(APIView):
                 toppings = order_details[1].split(",")
                 for topping in toppings:
                     tp_data = topping.strip()
-                    topping_dt = models.Topping.objects.get(name=tp_data)
+                    topping_dt = get_object_or_404(models.Topping, name=tp_data)
                     order.topping.add(topping_dt)
                     cats = models.Category.objects.filter(topping__name=tp_data)
                     tp += int(cats.get(size=size).price)
