@@ -75,6 +75,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         return user
 
+
 class LoginSerializer(serializers.Serializer):
     """The class to serialize login details"""
 
